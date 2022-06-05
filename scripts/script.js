@@ -15,33 +15,39 @@ function computerPlay() {
 // plays a single round of rock, paper, scissors, between player and computer
 // String String > String
 function playRound(playerSelection, computerSelection) {
-
-    if(playerSelection.toLowerCase() == "rock") {
-        if(computerSelection == "rock") {
-            return "You tied! Rock can't beat Rock"
-        } else if(computerSelection == "paper") {
-            return "You lose! Paper beats Rock"
-        }  else {
-            return "You Win! Rock beats Scissors"
-        }
-    } else if(playerSelection.toLowerCase() == "paper") {
-        if(computerSelection == "rock") {
-            return "You Win! Paper beats Rock"
-        } else if(computerSelection == "paper") {
-            return "You tied! Paper can't beat Paper"
-        }  else {
-            return "You Lose! Scissors beats Papper"
-        }
-    } else if(playerSelection.toLowerCase() == "scissors") {
-        if(computerSelection == "rock") {
-            return "You Lose! Rock beats Scissors"
-        } else if(computerSelection == "paper") {
-            return "You Win! Scissors beats Paper"
-        }  else {
-            return "You Tied! Scissors can't beats Scissors"
-        }
-    } else {
-        return "You didn't enter rock, papper, or scissors. Try again."
+    switch(playerSelection.toLowerCase()) {
+        case "rock":
+            switch(computerSelection) {
+                case "rock":
+                    return "You tied! Rock can't beat Rock"
+                case "paper":
+                    return "You lose! Paper beats Rock"
+                case "scissors":
+                    return "You Win! Rock beats Scissors"
+            }
+            break;
+        case "paper":
+            switch(computerSelection) {
+                case "rock":
+                    return "You Win! Paper beats Rock"
+                case "paper":
+                    return "You tied! Paper can't beat Paper"
+                case "scissors":
+                    return "You Lose! Scissors beats Paper"
+            }
+            break;
+        case "scissors":
+            switch(computerSelection) {
+                case "rock":
+                    return "You Lose! Rock beats Scissors"
+                case "paper":
+                    return "You Win! Scissors beats Paper"
+                case "scissors":
+                    return "You Tied! Scissors can't beats Scissors"
+            }
+            break;
+        default:
+            return "You didn't enter rock, papper, or scissors. Try again."
     }
 }
 
