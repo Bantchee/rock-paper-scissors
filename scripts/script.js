@@ -45,3 +45,11 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
+// function will run a 5 round game of rock, paper, scissors
+function game() {
+    for(let i = 0; i < 5; i++) {
+        let userInput = prompt("Enter: rock, paper, or scissors");
+        let result = playRound(userInput, computerPlay());
+        console.log(result);
+    }
+}
