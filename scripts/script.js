@@ -1,5 +1,17 @@
+const divContainer = document.querySelector('.container');
+const buttons = document.querySelectorAll('button');
+
+const scoreBoard = document.querySelector('.score-board');
+const playerScore = document.querySelector('.player-score');
+const computerScore = document.querySelector('.computer-score');
+
+const divResults = document.querySelector('.results');
+
+let currentRound = 0;
+let gameOver = false;
 
 // Function will randomly return Rock, Paper, or Scissors when called
+// Input > Output : NOTHING > String
 function computerPlay() {
     let num = Math.random();
 
@@ -52,76 +64,97 @@ function playRound(playerSelection, computerSelection) {
 }
 
 /*
-    function that returns current player score
-    Input > Output : String Int > Int
-    else if str has 'win'
+    function that updates current player score
+    Input > Output : String String > Int
+    Get scoreNumber from scoreStr
+    if str has 'win'
         return score + 1
     else 
         return score
 */
-function getPlayerScore(str, score) {
+function updatePlayerScore(str, scoreStr) {
+    let scoreNum = getPlayerScore(scoreStr);
     // when search returns -1, that means it didn't find a match
-    return (str.search(/win/i) == -1) ? score : score + 1;
+    return (str.search(/win/i) == -1) ? scoreNum : scoreNum + 1;
+}
+
+/*
+    function that returns current player score
+    Input > Output : String > Int
+    Take out the player score number from scoreStr
+    Convert to int
+*/
+function getPlayerScore(scoreStr) {
+    return parseInt(scoreStr.slice(14));
+}
+
+/*
+    function that updates current computer score
+    Input > Output : String Int > Int
+    Get scoreNumber from scoreStr
+    if str has 'lose'
+        return score + 1
+    else 
+        return score
+*/
+function updateComputerScore(str, scoreStr) {
+    let scoreNum = getComputerScore(scoreStr);
+    return (str.search(/lose/i) == -1) ? scoreNum : scoreNum + 1;
 }
 
 /*
     function that returns current computer score
-    Input > Output : String Int > Int
-    else if str has 'lose'
-        return score + 1
-    else 
-        return score
+    Input > Output : String > Int
+    Take out the computer score number from scoreStr
+    Convert to int
 */
-function getComputerScore(str, score) {
-    return (str.search(/lose/i) == -1) ? score : score + 1;
+function getComputerScore(scoreStr) {
+    return parseInt(scoreStr.slice(15));
 }
-    
 
-// function will run a 5 round game of rock, paper, scissors
-/* function game() {
-    for(let i = 0; i < 5; i++) {
-        let userInput = prompt("Enter: rock, paper, or scissors");
-        let result = playRound(userInput, computerPlay());
-        console.log(result);
-    }
-} */
-
-const divContainer = document.querySelector('.container');
-const buttons = document.querySelectorAll('button');
-const divResults = document.querySelector('.results');
-const currentRound = document.querySelector(".current-round");
-const playerScore = document.querySelector('.player-score');
-const computerScore = document.querySelector('.computer-score');
-
-
-buttons.forEach(button => {
-    button.addEventListener('click', () => {
-        let result;
-        switch(button.id) {
+/* 
+Function that Updates the UI
+Input > Ouput : Event > NOTHING
+*/
+function updateUI(event) {
+    if(currentRound > 4 && (getPlayerScore(playerScore.textContent) != getComputerScore(computerScore.textContent))) {
+        if(getPlayerScore(playerScore.textContent) > getComputerScore(computerScore.textContent)) {
+            const paraResultFinal = document.createElement('p');
+            paraResultFinal.textContent = `You won ${getPlayerScore(playerScore.textContent)} of 
+                    ${currentRound} rounds! You Won the Game! To restart click Rock, Paper, or Scissors.`
+            divResults.appendChild(paraResultFinal);
+            gameOver = true;
+        } else {
+            const paraResultFinal = document.createElement('p');
+            paraResultFinal.textContent = `You won ${getPlayerScore(playerScore.textContent)} of 
+            ${currentRound} rounds! You lost the Game! To restart click Rock, Paper, or Scissors.`
+            divResults.appendChild(paraResultFinal);
+            gameOver = true;
+        }
+    } else {
+        currentRound++;
+        const paraResult = document.createElement('p');
+        switch(event.target.id) {
             case "btn-rock":
-                result = playRound("rock", computerPlay());
-                currentRound.textContent = result;
-                playerScore.textContent = getPlayerScore(result, parseInt(playerScore.textContent));
-                computerScore.textContent = getComputerScore(result, parseInt(computerScore.textContent));
+                paraResult.textContent = `Round ${currentRound} : ${playRound("rock", computerPlay())}`;
+                playerScore.textContent = `Player Score: ${updatePlayerScore(paraResult.textContent, playerScore.textContent)}`;
+                computerScore.textContent = `Computer Score: ${updateComputerScore(paraResult.textContent, computerScore.textContent)}`;
                 break;
             case "btn-paper":
-                result = playRound("paper", computerPlay());
-                currentRound.textContent = result;
-                playerScore.textContent = getPlayerScore(result, parseInt(playerScore.textContent));
-                computerScore.textContent = getComputerScore(result, parseInt(computerScore.textContent));
+                paraResult.textContent = `Round ${currentRound} : ${playRound("paper", computerPlay())}`;
+                playerScore.textContent = `Player Score: ${updatePlayerScore(paraResult.textContent, playerScore.textContent)}`;
+                computerScore.textContent = `Computer Score: ${updateComputerScore(paraResult.textContent, computerScore.textContent)}`;
                 break;
             case "btn-scissors":
-                result = playRound("scissors", computerPlay());
-                currentRound.textContent = result;
-                playerScore.textContent = getPlayerScore(result, parseInt(playerScore.textContent));
-                computerScore.textContent = getComputerScore(result, parseInt(computerScore.textContent));
+                paraResult.textContent = `Round ${currentRound} : ${playRound("rock", computerPlay())}`;
+                playerScore.textContent = `Player Score: ${updatePlayerScore(paraResult.textContent, playerScore.textContent)}`;
+                computerScore.textContent = `Computer Score: ${updateComputerScore(paraResult.textContent, computerScore.textContent)}`;
                 break;
         }
-    });
+        divResults.appendChild(paraResult);
+    }
+}
+
+buttons.forEach(button => {
+    button.addEventListener('click', (event) => gameOver ? window.location.reload(true) : updateUI(event))
 });
-
-
-// Create div element that displays the result of playRound();
-
-// Display the running score, announce winner once computer or player reaches 5 points
-// 
